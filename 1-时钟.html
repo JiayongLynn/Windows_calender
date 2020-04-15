@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="wrap">
+        <!-- 上面的日期时钟部分 -->
+        <div class="date">
+            <!-- Clock -->
+            <div id="clock">
+                <ul class="circle">
+                    
+                </ul>
+                <div class="dot"></div>
+                <div class="hour"></div>
+                <div class="minute"></div>
+                <div class="sec"></div>
+            </div>
+            <div id="now">
+                <p></p>
+                <p></p>
+            </div>
+        </div>
+        <!-- 中间的日期选择框 -->
+        <div id="ctrls">
+            <a href="javascript:;" id="option">2019年3月</a>
+            <div id="arrows">
+                <a href="javscript:;" id="prev"></a>
+                <a href="javascript:;" id="next"></a>
+            </div>
+        </div>
+        <ul class="week">
+            <li class="date-cell">日</li>
+            <li class="date-cell">一</li>
+            <li class="date-cell">二</li>
+            <li class="date-cell">三</li>
+            <li class="date-cell">四</li>
+            <li class="date-cell">五</li>
+            <li class="date-cell">六</li>
+        </ul>
+        <div id="main">
+            <div class="board"></div>
+        </div>
+    </div>
+    
+    <script src="./main.js"></script>
+    <script>
+        // 表盘并且指针运动、日期显示
+        (function(){
+            var ulList = document.querySelector('.circle');
+            var hourDom = document.querySelector('.hour');
+            var minuteDom = document.querySelector('.minute');
+            var secDom = document.querySelector('.sec');
+            var days = document.querySelectorAll('#now p');
+            var deg = 30;
+            var weekArr = ['日','一','二','三','四','五','六'];
+            ulList.innerHTML = renderDegree();
+            function renderDegree(){
+                var html = ''
+                for(var i=0;i<12;i++){
+                    html += '<li class="degree" style="transform:rotate('+deg*i+'deg)"></li>';
+                }
+                return html;
+            }
+            runPointer();
+            setInterval(runPointer,1000);
+            //指针运行
+            function runPointer(){
+                var date = new Date();
+                var sec = date.getSeconds();
+                var minute = date.getMinutes() + sec/60;
+                var hour = date.getHours() + minute/60;
+                var secDeg = sec*360/60 ;
+                var minuteDeg = minute * 360/60 ;
+                var hourDeg = hour * 30;
+                hourDom.style.transform = `rotate(${hourDeg-90}deg)`;
+                minuteDom.style.transform = `rotate(${minuteDeg}deg)`;
+                secDom.style.transform = `rotate(${secDeg+45}deg)`;
+            }
+            //显示日期
+            function getDay(){
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth()+1;
+                var day = date.getDate();
+                var dateStr = year+'年'+addZero(month)+'月'+addZero(day)+'日';
+                var week = date.getDay();
+                //年月日
+                days[0].innerHTML = dateStr;
+                days[1].innerHTML = '星期'+weekArr[week];
+            }
+            function addZero(num){
+                return num<10 ? '0'+num : ''+num;
+            }
+            getDay();
+        })()
+        
+    </script>
+</body>
+</html>

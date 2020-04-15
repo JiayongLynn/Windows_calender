@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="wrap">
+        <!-- 上面的日期时钟部分 -->
+        <div class="date">
+            <!-- Clock -->
+            <div id="clock">
+                <ul class="circle">
+                    
+                </ul>
+                <div class="dot"></div>
+                <div class="hour"></div>
+                <div class="minute"></div>
+                <div class="sec"></div>
+            </div>
+            <div id="now">
+                <p></p>
+                <p></p>
+            </div>
+        </div>
+        <!-- 中间的日期选择框 -->
+        <div id="ctrls">
+            <a href="javascript:;" id="option"></a>
+            <div id="arrows">
+                <a href="javscript:;" id="prev"></a>
+                <a href="javascript:;" id="next"></a>
+            </div>
+        </div>
+        <ul class="week">
+            <li class="date-week">日</li>
+            <li class="date-week">一</li>
+            <li class="date-week">二</li>
+            <li class="date-week">三</li>
+            <li class="date-week">四</li>
+            <li class="date-week">五</li>
+            <li class="date-week">六</li>
+        </ul>
+        <div id="main">
+            <div class="board"></div>
+        </div>
+    </div>
+    
+    <script src="./main.js"></script>
+    <script>
+        // 表盘并且指针运动、日期显示
+        (function(){
+            var ulList = document.querySelector('.circle');
+            var hourDom = document.querySelector('.hour');
+            var minuteDom = document.querySelector('.minute');
+            var secDom = document.querySelector('.sec');
+            //度数
+            var deg = 30;
+            ulList.innerHTML = renderDegree();
+            function renderDegree(){
+                var html = ''
+                for(var i=0;i<12;i++){
+                    html += '<li class="degree" style="transform:rotate('+deg*i+'deg)"></li>';
+                }
+                return html;
+            }
+            runPointer();
+            setInterval(runPointer,1000);
+            //指针运行
+            function runPointer(){
+                var date = new Date();
+                var sec = date.getSeconds();
+                var minute = date.getMinutes() + sec/60;
+                var hour = date.getHours() + minute/60;
+                var secDeg = sec*360/60 ;
+                var minuteDeg = minute * 360/60 ;
+                var hourDeg = hour * 30;
+                hourDom.style.transform = `rotate(${hourDeg-90}deg)`;
+                minuteDom.style.transform = `rotate(${minuteDeg}deg)`;
+                secDom.style.transform = `rotate(${secDeg+45}deg)`;
+            }
+           
+           
+        })();
+        (function(){
+            var days = document.querySelectorAll('#now p');
+             //周数组
+             var weekArr = ['日','一','二','三','四','五','六'];
+            //定义显示的天数
+            var showDay = 42;
+            //当天日期对象
+            var dayNow = new Date();
+            var yearNow = dayNow.getFullYear();
+            var monthNow = dayNow.getMonth();
+            var dateNow = dayNow.getDate();
+            //记录切换的日期
+            var checkYear = yearNow;
+            var checkMonth = monthNow;
+            var checkDate = dateNow;
+            //显示框
+            var main = document.querySelector('.board');
+            var bigMain = document.querySelector('#main');
+            //显示日期
+            function getDay(){
+                var year = dayNow.getFullYear();
+                var month = dayNow.getMonth()+1;
+                var day = dayNow.getDate();
+                var dateStr = year+'年'+addZero(month)+'月'+addZero(day)+'日';
+                var week = dayNow.getDay();
+                //年月日
+                days[0].innerHTML = dateStr;
+                days[1].innerHTML = '星期'+weekArr[week];
+            }
+            function addZero(num){
+                return num<10 ? '0'+num : ''+num;
+            }
+            getDay();
+            //创建日期视图思路
+            //一共有42个格子
+            //日期视图由上个月，今个月，下个月组成
+            //首先找到这个月第一天处于周几，这样就可以知道上个月要填多少天进去，下个月同理，找到最后一天。
+            function renderDayView(month,year,dom){
+                var lastMonth = month+1;
+                if(lastMonth == 12){
+                    lastMonth = 0;
+                }
+                //获取这个月有多少天
+                var dayNum = new Date(year,lastMonth,0).getDate();
+                //获取这个月第一天第一天周几
+                var weekIndex = new Date(year,month,1).getDay();
+                //获取上个月最后一天
+                var prevMonthDay = new Date(year,month,0).getDate();
+                
+                //拼接ul
+                var insertUl = '<ul class="date">';
+                for(var i=0;i< showDay; i++){
+                    //拼接上个月的
+                    if(i<weekIndex){
+                        insertUl += '<li class="date-cell other-date">'+ (prevMonthDay+i+1 - weekIndex ) +'</li>';
+                    }else if(i-weekIndex<dayNum){
+                        //今个月的
+                        if(i +1 - weekIndex == dateNow && year == yearNow && month == monthNow){
+                            // 就是·今日·
+                            insertUl += '<li class="date-cell active">'+ (i +1 - weekIndex ) +'</li>';
+                        }else{
+                            insertUl += '<li class="date-cell">'+ (i +1 - weekIndex ) +'</li>';
+                        }
+                    }else{
+                        //下个月的
+                        insertUl += '<li class="date-cell other-date">'+  (i - dayNum-weekIndex+1) +'</li>';
+                    }
+                }
+                dom.innerHTML = insertUl;
+            }
+            //渲染月份
+            function renderMonth(year,dom){
+                var insertUl = '<ul class="month">';
+                for (var i =1;i<=12;i++){
+                    if(i==monthNow+1 && year == yearNow){
+                        insertUl += '<li class="month-cell active">'+i+'月</li>';
+                    }else{
+                        insertUl += '<li class="month-cell">'+i+'月</li>';
+                    }
+                }
+                insertUl += '</ul>';
+                dom.innerHTML = insertUl;
+                var li = dom.querySelectorAll("li");
+                li.forEach(function(item){
+                    item.onclick = function(){
+                        //更换月份
+                        checkMonth = parseInt(this.innerHTML)-1;
+                        optionFlag = 0;
+                        createView();
+                    };
+                });
+            }
+            //渲染年份
+            //显示16个年份,10个今年的，最前面有前十年的（4个）,后面十年的2个
+            function renderYear(year,dom){
+                var nowYearBegin = Math.floor(year/10)*10;
+                var insertUl = '<ul class="year">';
+                for(i=0;i<16;i++){
+                    if(i<4){
+                        insertUl += '<li class="year-cell other-yaer">'+(nowYearBegin+i-4)+'</li>';
+                    }else if(i-4<10){
+                        if(nowYearBegin+i-4 == yearNow){
+                            insertUl += '<li class="year-cell active">'+(nowYearBegin+i-4)+'</li>';
+                        }else{
+                            insertUl += '<li class="year-cell">'+(nowYearBegin+i-4)+'</li>';
+                        }
+                    }else{
+                        insertUl += '<li class="year-cell  other-yaer">'+(nowYearBegin+i-4)+'</li>';
+                    }
+                }
+                insertUl += '</ul>';
+                dom.innerHTML = insertUl;
+                var li = dom.querySelectorAll("li");
+                li.forEach(function(item){
+                    item.onclick = function(){
+                        //更换年份
+                        checkYear = parseInt(this.innerHTML);
+                        optionFlag = 1;
+                        createView();
+                    };
+                });
+            }
+
+
+            //获取切换按钮
+            var optionBtn = document.querySelector('#option');
+            var optionType = 0;//定义0为日视图 1为月视图 2为年视图
+            var optionFlag;
+            optionBtn.onclick = function(){
+                optionFlag = optionType+1;
+                if(optionFlag > 2){
+                    optionType = 2;
+                }else{
+                    createView();
+                }
+            }
+            //渲染视图
+            //加进出动画效果在从日到年，还有另外从年到日
+            function createView(){
+                if(optionFlag == undefined){
+                    optionBtn.innerHTML = checkYear+'年'+addZero(checkMonth+1)+'月';
+                    renderDayView(checkMonth,checkYear,main);
+                    return;
+                }
+                if(optionType<optionFlag){
+                    bigMain.innerHTML = '<div class="toHide board"></div><div class="toShow board"></div>';
+                    var dom = document.querySelectorAll('.board');
+                    switch(optionFlag){
+                        case 1:
+                            //日视图切换到月份视图
+                            optionBtn.innerHTML = checkYear+'年';
+                            renderMonth(checkYear,dom[1]);
+                            renderDayView(checkMonth,checkYear,dom[0]);
+                            optionType = optionFlag;
+                            break;
+                        case 2:
+                            //月视图切换到年时图
+                            var YearBegin = Math.floor(checkYear/10)*10;
+                            optionBtn.innerHTML = YearBegin+'-'+(YearBegin+9)+'年';
+                            renderYear(checkYear,dom[1]);
+                            renderMonth(checkYear,dom[0]);
+                            optionType = optionFlag;
+                            break;
+                    }
+                }else{
+                    bigMain.innerHTML = '<div class="toBlow board"></div><div class="toNarrow board"></div>';
+                    var dom = document.querySelectorAll('.board');
+                    switch(optionFlag){
+                        case 0:
+                            //月视图切换到日视图
+                            optionBtn.innerHTML = checkYear+'年'+addZero(checkMonth+1)+'月';
+                            renderMonth(checkYear,dom[0]);
+                            renderDayView(checkMonth,checkYear,dom[1]);
+                            optionType = optionFlag;
+                            break;
+                        case 1:
+                            //年视图切换到月时图
+                            optionBtn.innerHTML = checkYear+'年';
+                            renderMonth(checkYear,dom[1]);
+                            renderYear(checkYear,dom[0]);
+                            optionType = optionFlag;
+                            break;
+                    }
+                }
+            }
+            createView();
+
+
+            //上下切换
+            var prev = document.querySelector('#prev');
+            var next = document.querySelector('#next');
+            //上滑
+            prev.onclick = function(){
+                slideView(-1);
+            };
+            //下滑
+            next.onclick = function(){
+                slideView(1);
+            }
+            function slideView(index){
+                if(index<0){
+                    //上滑
+                    bigMain.innerHTML = '<div class="bottomOut board"></div><div class="board toBottom"></div>';
+                    var board = bigMain.querySelectorAll(".board");
+                    viewMove(index,board);
+                }else{
+                    //下滑
+                    bigMain.innerHTML = '<div class="topOut board"></div><div class="board toTop"></div>';
+                    var board = bigMain.querySelectorAll(".board");
+                    viewMove(index,board);
+                }
+            }
+            //上滑下滑视图对象封装
+            function viewMove(type,board){
+                //先看处于什么视图
+                switch(optionType){
+                        case 0:
+                            renderDayView(checkMonth,checkYear,board[0]);
+                            //日视图 
+                            if(type<0){
+                                checkMonth--;
+                            }else{
+                                // 月份加1
+                                checkMonth++;
+                            }
+                            //实例化切换后的对象
+                            slideDate(checkMonth,checkYear);
+                            optionBtn.innerHTML = checkYear+'年'+addZero(checkMonth+1)+'月';
+                            renderDayView(checkMonth,checkYear,board[1]);
+                            break;
+                        case 1:
+                            //月视图
+                            renderMonth(checkYear,board[0]);
+                            if(type<0){
+                                checkYear--;
+                            }else{
+                                checkYear++;
+                            }
+                            //实例化切换后的对象
+                            slideDate(checkMonth,checkYear);
+                            optionBtn.innerHTML = checkYear+'年';
+                            renderMonth(checkYear,board[1]);
+                            break;
+                        case 2:
+                            //年时图
+                            renderYear(checkYear,board[0]);
+                            if(type<0){
+                                checkYear = checkYear-10;
+                            }else{
+                                checkYear = checkYear+10;
+                            }
+                            //实例化切换后的对象
+                            slideDate(checkMonth,checkYear);
+                            var YearBegin = Math.floor(checkYear/10)*10;
+                            optionBtn.innerHTML = YearBegin+'-'+(YearBegin+9)+'年';
+                            renderYear(checkYear,board[1]);
+                }
+            }
+            //重新实例化日期对象
+            function slideDate(month,year){
+                var date = new Date(year,month);
+                checkYear = date.getFullYear();
+                checkMonth = date.getMonth();
+            }
+        })()
+    </script>
+</body>
+</html>

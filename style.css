@@ -1,0 +1,284 @@
+body{
+    background: url('./images/timg.jpg') no-repeat;
+    background-size: cover;
+}
+p{
+    margin: 0;
+}
+ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#wrap{
+    margin:120px auto;
+    width: 360px;
+    height: 520px;
+    background: rgba(255, 255, 255, .8);
+    box-shadow: 0px 0px 10px #000;
+    border-radius: 5px;
+}
+.date{
+    position: relative;
+    height: 91px;
+}
+#clock{
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: url('./images/clock-bg.jpg') no-repeat;
+    background-size: 100% 100%;
+    border: 5px solid #c0c0c0;
+    box-shadow:0px 0px 5px 1px #000;
+    position: relative;
+    left: 28px;
+    top: -72px;
+}
+.circle{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.degree{
+    width: 2px;
+    height: 10px;
+    background: #000;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transform-origin: 0 50px;
+}
+.dot{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #000;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+.hour{
+    width: 40px;
+    height: 30px;
+    background: url('./images/hour.png') no-repeat;
+    background-size: 100% 100%;
+    left: 44px;
+    top: 40px;
+    transform:rotate(0deg);
+    transform-origin: 10px 15px;
+    position: absolute;
+}
+.minute{
+    width: 3px;
+    height: 35px;
+    background-color: #000;
+    left: 50%;
+    top: 21px;
+    position: absolute;
+    transform: translate(-2px,0);
+    transform-origin: bottom;
+    border-radius: 50%;
+}
+.sec{
+    width: 43px;
+    height: 44px;
+    background: url('./images/hand.png') no-repeat;
+    position: absolute;
+    left: 18px;
+    top: 16px;  
+    transform-origin: 37px 39px;
+}
+#now{
+    position: absolute;
+    left: 189px;
+    top: 15px;
+}
+#now p {
+    font-size: 14px;
+    line-height: 26px;
+}
+#ctrls {
+    width: 100%;
+    height: 37px;
+    line-height: 37px;
+    /* background:rgba(0,0,0,.6); */
+    /* backdrop-filter:blur(20px); */
+}
+#ctrls #option {
+    color: #000;
+    float: left;
+    margin-left: 23px;
+    text-decoration: none;
+}
+#ctrls #arrows {
+    float: right;
+    margin-right: 22px;
+}
+#ctrls #arrows a {
+    float: left;
+    width: 23px;
+    height: 11px;
+    margin-top: 14px;
+    margin-left: 20px;
+}
+#ctrls #arrows a {
+    float: left;
+    width: 23px;
+    height: 11px;
+    margin-top: 14px;
+    margin-left: 20px;
+}
+#arrows #prev {
+    background: url(./images/prev.png) no-repeat;
+}
+#arrows #next {
+    background: url(./images/next.png) no-repeat;
+}
+.week{
+    height: 46px;
+    display: flex;
+    justify-content: center;
+    background:rgba(0,0,0,.5);
+}
+.date-week{
+    width: 46px;
+    height: 46px;
+    line-height: 46px;
+    border-radius: 50%;
+    text-align: center;
+    color: #e15671;
+    font-weight: 700;
+}
+#main {
+    width: 100%;
+    height: 346px;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+.board {
+    display: flex;
+    padding: 21px 16px 0;
+    flex-wrap: wrap;
+    position: absolute;
+}
+.date {
+    display: flex;
+    flex-wrap: wrap;
+    width: 322px;
+}
+.date-cell{
+    width: 46px;
+    height: 46px;
+    line-height: 46px;
+    border-radius: 50%;
+    text-align: center;
+    color: #3a3a3a;
+}
+.other-date{
+    color: #999;
+}
+.month{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 328px;
+    height: 330px;
+}
+.month-cell{
+    width: 82px;
+    height: 82px;
+    line-height: 82px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.year{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.year-cell{
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    color: #3a3a3a;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.other-yaer{
+    color: #a2a2a2;
+}
+.active{
+    color: #fff;
+    background-color: #e15671;
+}
+/* moveStyle */
+.toBottom{
+    animation: toBottom 0.3s ease;
+    animation-fill-mode: both;
+}
+@keyframes toBottom{
+    from { top: -390px }
+    to { top: 0px }
+}
+.toTop{
+    animation: toTop 0.3s ease;
+    animation-fill-mode: both;
+}
+
+@keyframes toTop{
+    from { top: 390px }
+    to { top: 0 }
+}
+.bottomOut{
+    animation: bottomOut 0.3s ease;
+    animation-fill-mode: both;
+}
+@keyframes bottomOut{
+    from { top: 0 }
+    to { top: 390px }
+}
+.topOut{
+    animation: topOut 0.3s ease;
+    animation-fill-mode: both;
+}
+@keyframes topOut{
+    from { top: 0 }
+    to { top: -390px }
+}
+.toHide{
+    animation: toHide 0.3s ease;
+    animation-fill-mode: both;
+}
+@keyframes toHide{
+    from { opacity: 1; transform: scale(1) }
+    to { opacity: 0; transform: scale(0) }
+}
+.toShow{
+    animation: toShow 0.3s ease;
+    animation-fill-mode: both;
+}
+@keyframes toShow{
+    from { opacity: 0; transform: scale(2) }
+    to { opacity: 1; transform: scale(1) }
+}
+.toBlow{
+    animation: toBlow 0.3s ease;
+    animation-fill-mode: both;
+}
+@keyframes toBlow{
+    from { opacity: 1; transform: scale(1) }
+    to { opacity: 0; transform: scale(2) }
+}
+.toNarrow{
+    animation: toNarrow 0.3s ease;
+    animation-fill-mode: both;
+}
+@keyframes toNarrow{
+    from { opacity: 0; transform: scale(0) }
+    to { opacity: 1;transform: scale(1) }
+}

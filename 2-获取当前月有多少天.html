@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>请输入月份，我告诉你有多少天?</p>
+    <input type="text" id="month">
+    <input type="submit" class="submit" value="提交">
+    <p class="answer"></p>
+    <script>
+        var btn = document.querySelector('.submit');
+        var month = document.querySelector('#month');
+        var date = new Date();
+        var nowYear = date.getFullYear();
+        var answer = document.querySelector('.answer');
+        btn.onclick = function(){
+            monthVal = month.value;
+            if(parseInt(monthVal)!=NaN && parseInt(monthVal)>0 && parseInt(monthVal)<13){
+                var getMonthDay = new Date(nowYear,monthVal,0).getDate();                
+                answer.innerHTML = getMonthDay + '天';
+            }else{
+                answer.innerHTML = '输入不合法';
+            }
+        }
+    </script>
+</body>
+</html>
